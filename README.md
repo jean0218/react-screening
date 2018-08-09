@@ -1,15 +1,15 @@
 ## React-loadList
-  基于React实现的移动端列表加载组件
+  基于React实现的移动端三维度筛选条件组件
 
 ## 何时使用
-加载数据列表
+筛选分类使用
 
 ## 代码演示
 
-### 示例1--基本用法                        
+### 默认                        
 ```jsx
 import React, { Component } from 'react';
-import { LoadList } from '../src/index';
+import {  ScreeningClass, ScreeningContent } from './src/index';
 
 const data = [
   'Racing car sprays burning fuel into crowd.',
@@ -20,69 +20,122 @@ const data = [
 ];
 
 export default class Demo00 extends Component{
-    render(){
+    handleChangeQuery(newState) {//筛选结果
+        console.log('接收值',newState)
+    }
+    render() {
         return (
-            <LoadList
-                dataSource = {data}
-                renderItem = {item =>(<div>{item}</div>)}
-            />
+            <ScreeningClass 
+                className = {className}
+                onChange = {this.handleChangeQuery}
+            >
+                <ScreeningContent
+                    order = '0'
+                    tabName = {tagName}
+                    content = { [{list:tagList, compareName: 'id', defaultValue:tag}] }
+                />
+                <ScreeningContent
+                    order = '1'
+                    tabName = {areaName}
+                    content = {
+                        [
+                            {list:areaList, compareName: 'gbCode', defaultValue:defaultAreaCode},
+                            {list:bizZoneList, compareName: 'id', defaultValue:mchtZoneid, nearValue:distance}
+                        ]
+                    } 
+                />
+                <ScreeningContent
+                    order = '2'
+                    tabName = {joinName}
+                    content = { [{list:joinList, compareName: 'id', defaultValue:join}] }
+                />                
+            </ScreeningClass>
         )
     }
 }
 ```
 
-### 示例2--获取后端返回的数据       
-```jsx
-import React, { Component } from 'react';
-import { LoadListGetData } from '../src/index';
-
-export default function Demo01(){        
-    const queryParam = {
-        pageSize:10,
-        pageNo:1
-    }
-    return (
-        <LoadListGetData
-            queryParam = {queryParam}
-            getData = {(queryParam) => new Promise(function(resolve, reject) {          
-                    const postList = fetch('https://www.ucardvip.com/gateway/api/discount/getNearMchtShop', {method:'POST',body:JSON.stringify(queryParam)});
-                    postList.then(result =>{
-                        resolve({
-                            code:result.code,
-                            dataList:result.data.shopls,
-                            errMsg:result.errMsg || '',
-                        });
-                    }).catch(function(error) {
-                        reject(error);
-                    });
-                })
-            }
-            renderItem = {item =>(<div>{item.address}</div>)}
-        />
-    )
-};
-```
-
 ## 当前主要功能
-- 解析后端返回的数据，可联合redux使用
-- 自带获取数据中的加载中状态，获取数据后加载失效状态
-- 可下滑刷新当前列表
-- 下滑翻至下一页
-- 翻到最后一页显示提示信息，默认“我是有底线的”
+- 获取综合筛选结果
 
 ## API
-### List
+### ScreeningClass
 
 | 参数 | 说明 | 类型 | 默认值 |
 |---|---|---|---|
-|dataSource | 数据列表，常用redux的时候用 | Array | '' |
-|getData | 与dataSoure API不能同时使用，返回的是promise，常用来使用AJAX或者fetch获取数据，常见用法见在示例2 | Promise | - |
-|renderItem | 列表循环项,每个item能接收到的参数item, onChange, listIndex, array, itemKey | ReactNode | '' |
-|stopFlip | 值为true时，禁止翻页 | boolean | false |
-|isRefresh | 下滑刷新列表 | boolean | false |
-|className | 列表样式 | string | load-list |
-|renderDataIsNull | 数据返回为空时显示的组件，值为null时，显示默认组件 | ReactNode/null | null |
-|renderPageEnd | 访问到最后一页时显示的组件，值为null时，显示默认组件 | ReactNode/null | null |
-|renderServiceError | 服务器返回错误时时显示的组件，值为null时，显示默认组件 | ReactNode/null | null |
-|onServiceError | 服务器返回的错误时，处理的信息，如会话过期，操作失败，系统错误等错误发生后，希望调用的事件 | function/null | null |
+|className | 类名 | String | '' |
+|onChange | 选择所有筛选后的回调事件，里面储存着此次调用的所有结果,return Array | Function | [] |
+
+### ScreeningContent
+
+| 参数 | 说明 | 类型 | 默认值 |
+|---|---|---|---|
+|order | 同onChange事件中的类id,用以区分当前获取不同的分类数据 | String | null |
+|tabName | 标题名 | String | null |
+|content | 当前分类有几级选择，最多两层，每一级选择对应的数据默认值等 | Array | null |
+|content[i].list | 当前层级的list数据 | Array | null |
+|content[i].compareName | 当前层级的关键值比对值名 | String | null |
+|content[i].defaultValue | 当前层级的默认值名 | String | null |
+
+## 最终拿到的集合
+```js
+[{
+    id: 0, //类id
+    tabName: //标题名
+        tabKey: //标题值
+        tabContent: [{
+            level: 1,
+            levelData: {
+                name: '全城',
+                value: defaultTag, //值
+                compareName: 'id', //关键值比对值名
+            },
+        }, {
+            level: 2,
+            levelData: {
+                name: '全城',
+                value: defaultTag, //值
+                compareName: 'id', //关键值比对值名
+            },
+        }]
+}, {
+    id: 1, //类id
+    tabName: //标题名
+        tabKey: //标题值
+        tabContent: [{
+            level: 1,
+            levelData: {
+                name: '全城',
+                value: defaultTag, //值
+                compareName: 'id', //关键值比对值名
+            },
+        }, {
+            level: 2,
+            levelData: {
+                name: '全城',
+                value: defaultTag, //值
+                compareName: 'id', //关键值比对值名
+            },
+        }]
+}, {
+    id: 3, //类id
+    tabName: //标题名
+        tabKey: //标题值
+        tabContent: [{
+            level: 1,
+            levelData: {
+                name: '全城',
+                value: defaultTag, //值
+                compareName: 'id', //关键值比对值名
+            },
+        }, {
+            level: 2,
+            levelData: {
+                name: '全城',
+                value: defaultTag, //值
+                compareName: 'id', //关键值比对值名
+            },
+        }]
+}]
+```
 
