@@ -1,0 +1,92 @@
+/*-------------------------------------------------------------------------------------------------------------------
+筛选条件
+-------------------------------------------------------------------------------------------------------------------*/
+.filter-category{
+  width: 100%;
+  background: #fff;
+  position: relative;
+}
+.filter-category-top{
+  top: 0;
+}
+.filter-category-title{ 
+  background: #fff;
+  padding: .8rem 0; 
+  color: #333;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  border-bottom: .1rem solid #ebebeb;
+
+}
+
+.filter-category-title-item{
+  font-size: 1.4rem;
+  color: #333;
+  border-right: .1rem solid #ebebeb;
+  width: 50%;
+  line-height: 2.4rem;  
+  height: 2.4rem;
+  text-align: center;
+  overflow: hidden;
+  cursor:pointer;
+}
+
+.filter-category-title-item >.iconfont{  
+  color: #999;
+}
+.filter-category-title-item.active,.filter-category-title-item.active i{
+  color:#4497ff;
+}
+.filter-category-content{
+  height: 100%;
+  width: 100%;
+  overflow-y:scroll;
+}
+.filter-category-item{
+  width: 100%;
+  height: 4rem;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  font-size: 1.4rem;
+  color: #333;
+  padding-left: 2.5rem;
+  background: #fdfdfd;
+  overflow: hidden;
+  cursor:pointer;
+}
+.filter-category-item.active{
+  background: #fff;
+  color: #4497ff;
+}
+.filter-category-item.active .icon-right{
+  padding-left: 2rem;
+}
+
+.modal-backdrop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom:  0;
+  width: 100%;  
+  height: 100%;
+  z-index: 19999;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(0,0,0,.7);
+  overflow: scroll;
+/*  overflow:hidden;*/
+}
+
+.modal-open {
+  overflow: hidden;
+  height: 100%;
+  position: fixed;
+  width: 100%;
+}
