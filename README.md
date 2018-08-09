@@ -1,4 +1,4 @@
-## React-loadList
+## react-screening
   基于React实现的移动端三维度筛选条件组件
 
 ## 何时使用
